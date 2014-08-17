@@ -8,8 +8,8 @@ public class DesktopLauncher {
     public static void main(String[] arg) {
         LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
         config.title = "Flappy Fin";
-        config.width = 600;
-        config.height = 400;
+        config.width = 250;
+        config.height = 300;
         new LwjglApplication(new FlappyFinGame(), config);
     }
 }
