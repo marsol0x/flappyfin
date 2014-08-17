@@ -29,11 +29,11 @@ public class MainMenu implements Screen {
         game.batch.begin();
             game.font.setScale(1.5f);
             game.font.draw(game.batch, "Flappy Fin",
-                    Gdx.graphics.getWidth() / 3,
+                    10,
                     Gdx.graphics.getHeight() / 2);
             game.font.setScale(1.25f);
             game.font.draw(game.batch, "Press Space to Start",
-                    Gdx.graphics.getWidth() / 3,
+                    10,
                     Gdx.graphics.getHeight() / 3);
         game.batch.end();
 
