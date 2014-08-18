@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Animation.PlayMode;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.utils.Array;
 
 public class GameScreen implements Screen {
     private FlappyFinGame game;
@@ -16,11 +17,9 @@ public class GameScreen implements Screen {
     private TextureRegion[] fishFrames;
     private Animation fishAnimation;
     private float stateTime = 0.0f;
-
-    private final int ROCK_COLS = 3;
-    private final int ROCK_ROWS = 3;
-    private Texture rockSheet;
-    private TextureRegion[] rockTiles;
+    
+    private final WallBuilder wallBuilder = new WallBuilder();
+    private Array<WallPiece> walls;
 
     public GameScreen(FlappyFinGame game) {
         this.game = game;
@@ -30,16 +29,8 @@ public class GameScreen implements Screen {
         fishFrames = new TextureRegion[] { tmp[0][0], tmp[0][1] };
         fishAnimation = new Animation(0.27f, fishFrames);
         fishAnimation.setPlayMode(PlayMode.LOOP);
-
-        rockSheet = new Texture(Gdx.files.internal("rock_sheet.png"));
-        tmp = TextureRegion.split(rockSheet, rockSheet.getWidth() / ROCK_COLS, rockSheet.getHeight() / ROCK_ROWS);
-        rockTiles = new TextureRegion[ROCK_COLS * ROCK_ROWS];
-        int index = 0;
-        for (int row = 0; row < ROCK_ROWS; row++) {
-            for (int col = 0; col < ROCK_COLS; col++) {
-                rockTiles[index++] = tmp[row][col];
-            }
-        }
+        
+        walls = wallBuilder.buildWall(10, 100, 5, 2);
     }
 
     @Override
@@ -50,15 +41,16 @@ public class GameScreen implements Screen {
         stateTime += delta;
         game.batch.begin();
             game.batch.draw(fishAnimation.getKeyFrame(stateTime), Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight() / 2);
-            game.batch.draw(rockTiles[0], 10, 100);
-            game.batch.draw(rockTiles[1], 10 + (rockSheet.getWidth() / ROCK_COLS), 100);
+            for (WallPiece wp : walls) {
+            	game.batch.draw(wp.getTexture(), wp.getX(), wp.getY());
+            }
         game.batch.end();
     }
 
     @Override
     public void dispose() {
         fishSheet.dispose();
-        rockSheet.dispose();
+        wallBuilder.dispose();
     }
 
     @Override
