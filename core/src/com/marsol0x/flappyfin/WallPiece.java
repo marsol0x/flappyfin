@@ -36,8 +36,16 @@ public class WallPiece implements Poolable {
         return wall.getX();
     }
 
+    public void setX(float x) {
+        wall.setX(x);
+    }
+
     public float getY() {
         return wall.getY();
+    }
+
+    public void setY(float y) {
+        wall.setY(y);
     }
 
     public final TextureRegion getTexture() {
@@ -46,5 +54,9 @@ public class WallPiece implements Poolable {
 
     public void setTexture(TextureRegion img) {
         wallTexture = img;
+    }
+
+    public final Rectangle getRect() {
+        return wall;
     }
 }

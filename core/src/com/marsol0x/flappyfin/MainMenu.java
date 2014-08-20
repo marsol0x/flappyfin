@@ -1,7 +1,6 @@
 package com.marsol0x.flappyfin;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -32,13 +31,13 @@ public class MainMenu implements Screen {
                     10,
                     Gdx.graphics.getHeight() / 2);
             game.font.setScale(1.25f);
-            game.font.draw(game.batch, "Press Space to Start",
+            game.font.draw(game.batch, "Click to Start",
                     10,
                     Gdx.graphics.getHeight() / 3);
         game.batch.end();
 
-        // Wait for player to press space
-        if (Gdx.input.isKeyPressed(Input.Keys.SPACE)) {
+        // Wait for player to click left click
+        if (Gdx.input.isTouched()) {
             game.setScreen(new GameScreen(game));
             dispose();
         }
