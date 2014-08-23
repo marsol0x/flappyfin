@@ -18,11 +18,14 @@ public class MainMenuScreen implements Screen {
     private Texture subTitleImg;
     private Rectangle subTitlePos;
 
+    private Tweener titleTween;
+    private Tweener subTitleTween;
+
     public MainMenuScreen(FlappyFinGame game) {
         this.game = game;
 
         titleImg = new Texture(Gdx.files.internal("title.png"));
-        titlePos = new Rectangle(50,
+        titlePos = new Rectangle(45,
                 Gdx.graphics.getHeight() - 50 - titleImg.getHeight(),
                 titleImg.getWidth(),
                 titleImg.getHeight());
@@ -31,6 +34,9 @@ public class MainMenuScreen implements Screen {
                 (Gdx.graphics.getHeight() / 2) - subTitleImg.getHeight(),
                 subTitleImg.getWidth(),
                 subTitleImg.getHeight());
+
+        titleTween = new Tweener(new Rectangle(titlePos.x, Gdx.graphics.getHeight(), 0, 0), titlePos, 1.5f);
+        subTitleTween = new Tweener(new Rectangle(subTitlePos.x, -subTitlePos.height, 0, 0), subTitlePos, 1.5f);
 
         camera = new OrthographicCamera();
         camera.setToOrtho(false, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
@@ -44,13 +50,18 @@ public class MainMenuScreen implements Screen {
         camera.update();
         game.batch.setProjectionMatrix(camera.combined);
 
+        titleTween.update(delta);
+        subTitleTween.update(delta);
+
         game.batch.begin();
             game.font.setScale(1.25f);
             game.batch.draw(titleImg, titlePos.x, titlePos.y, titlePos.width, titlePos.height);
             game.batch.draw(subTitleImg, subTitlePos.x, subTitlePos.y, subTitlePos.width, subTitlePos.height);
         game.batch.end();
 
-        // Wait for player to click left click
+        // Wait for player to click left click, but only after the tween is done
+        if (titleTween.isTweening() || subTitleTween.isTweening()) return;
+
         if (Gdx.input.isTouched()) {
             game.setScreen(new GameScreen(game));
             dispose();
