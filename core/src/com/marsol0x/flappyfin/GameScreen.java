@@ -45,11 +45,15 @@ public class GameScreen implements Screen {
         fishAnimation = new Animation(0.27f, fishFrames);
         fishAnimation.setPlayMode(PlayMode.LOOP);
 
+        // The player
         player = new Player(Gdx.graphics.getWidth() / 3, Gdx.graphics.getHeight() / 2);
         playerObj = new Rectangle(player.getX(), player.getY(), FISH_SIZE, FISH_SIZE);
+        // Player input
+        Gdx.input.setInputProcessor(player);
 
         scoreRects = new Array<Rectangle>();
         score = 0;
+
     }
 
     @Override
