@@ -86,7 +86,7 @@ public class GameScreen implements Screen {
 
         // Check player death
         if (player.isDead()) {
-            game.setScreen(new MainMenu(game));
+            game.setScreen(new MainMenuScreen(game));
             dispose();
         }
 

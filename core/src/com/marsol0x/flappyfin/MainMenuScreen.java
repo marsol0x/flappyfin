@@ -5,12 +5,12 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 
-public class MainMenu implements Screen {
+public class MainMenuScreen implements Screen {
     // We use this so that we can share the SpriteBatch on game between screens
     private FlappyFinGame game;
     private OrthographicCamera camera;
 
-    public MainMenu(FlappyFinGame game) {
+    public MainMenuScreen(FlappyFinGame game) {
         this.game = game;
 
         camera = new OrthographicCamera();

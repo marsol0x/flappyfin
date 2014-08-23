@@ -13,7 +13,7 @@ public class FlappyFinGame extends Game {
         batch = new SpriteBatch();
         font = new BitmapFont();
 
-        this.setScreen(new MainMenu(this));
+        this.setScreen(new MainMenuScreen(this));
     }
 
     @Override
