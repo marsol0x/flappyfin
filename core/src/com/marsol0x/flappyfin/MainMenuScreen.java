@@ -4,14 +4,33 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.math.Rectangle;
 
 public class MainMenuScreen implements Screen {
     // We use this so that we can share the SpriteBatch on game between screens
     private FlappyFinGame game;
     private OrthographicCamera camera;
 
+    private Texture titleImg;
+    private Rectangle titlePos;
+
+    private Texture subTitleImg;
+    private Rectangle subTitlePos;
+
     public MainMenuScreen(FlappyFinGame game) {
         this.game = game;
+
+        titleImg = new Texture(Gdx.files.internal("title.png"));
+        titlePos = new Rectangle(50,
+                Gdx.graphics.getHeight() - 50 - titleImg.getHeight(),
+                titleImg.getWidth(),
+                titleImg.getHeight());
+        subTitleImg = new Texture(Gdx.files.internal("subtitle.png"));
+        subTitlePos = new Rectangle((Gdx.graphics.getWidth() / 2) - (subTitleImg.getWidth() / 2),
+                (Gdx.graphics.getHeight() / 2) - subTitleImg.getHeight(),
+                subTitleImg.getWidth(),
+                subTitleImg.getHeight());
 
         camera = new OrthographicCamera();
         camera.setToOrtho(false, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
@@ -26,14 +45,9 @@ public class MainMenuScreen implements Screen {
         game.batch.setProjectionMatrix(camera.combined);
 
         game.batch.begin();
-            game.font.setScale(1.5f);
-            game.font.draw(game.batch, "Flappy Fin",
-                    10,
-                    Gdx.graphics.getHeight() / 2);
             game.font.setScale(1.25f);
-            game.font.draw(game.batch, "Click to Start",
-                    10,
-                    Gdx.graphics.getHeight() / 3);
+            game.batch.draw(titleImg, titlePos.x, titlePos.y, titlePos.width, titlePos.height);
+            game.batch.draw(subTitleImg, subTitlePos.x, subTitlePos.y, subTitlePos.width, subTitlePos.height);
         game.batch.end();
 
         // Wait for player to click left click
@@ -59,5 +73,8 @@ public class MainMenuScreen implements Screen {
     public void resume() {}
 
     @Override
-    public void dispose() {}
+    public void dispose() {
+        titleImg.dispose();
+        subTitleImg.dispose();
+    }
 }
