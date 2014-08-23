@@ -4,7 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector2;
 
 public class Player {
-    private final float SPEED = 20f;
+    private final float SPEED = 120f;
     private Vector2 playerPos;
     private float hopDelay = 0f;
 
@@ -20,16 +20,17 @@ public class Player {
         }
 
         if (Gdx.input.justTouched()) {
-            playerPos.y += SPEED / 2f;
             hopDelay = 0.2f;
+        }
 
+        if (hopDelay > 0f) {
+            playerPos.y += SPEED * delta;
             if (playerPos.y > Gdx.graphics.getHeight()) {
                 playerPos.y = Gdx.graphics.getHeight();
             }
-            return;
+        } else {
+            playerPos.y -= SPEED * delta / 2f;
         }
-
-        playerPos.y -= delta * SPEED;
 
         if (playerPos.y < 0) {
             dead = true;
