@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Animation.PlayMode;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 
 public class GameScreen implements Screen {
@@ -22,6 +23,11 @@ public class GameScreen implements Screen {
     private Rectangle playerObj;
 
     private final WallBuilder wallBuilder = new WallBuilder();
+    private final int WALL_STARTX = Gdx.graphics.getWidth();
+    private final int MIN_WALL_HEIGHT = Gdx.graphics.getHeight() / 64; // 4 rock tiles
+    private final int MAX_WALL_HEIGHT = Gdx.graphics.getHeight() / 16; // 1 rock tile
+    private final float WALL_TIME = 3f;
+    private float timeSinceWall = WALL_TIME;
 
     public GameScreen(FlappyFinGame game) {
         this.game = game;
@@ -34,8 +40,6 @@ public class GameScreen implements Screen {
 
         player = new Player(Gdx.graphics.getWidth() / 3, Gdx.graphics.getHeight() / 2);
         playerObj = new Rectangle(player.getX(), player.getY(), FISH_SIZE, FISH_SIZE);
-
-        wallBuilder.buildWall(200, 100, 3, 10);
     }
 
     @Override
@@ -64,6 +68,28 @@ public class GameScreen implements Screen {
             game.setScreen(new MainMenu(game));
             dispose();
         }
+
+        // Place new obstacles/walls
+        timeSinceWall += delta;
+        if (timeSinceWall >= WALL_TIME) {
+            timeSinceWall = 0f;
+            placeObstacle();
+        }
+    }
+
+    public void placeObstacle() {
+        // Build two walls with a space between them
+        // Get bottom wall height
+        int height = MathUtils.random(MIN_WALL_HEIGHT, MAX_WALL_HEIGHT - (MIN_WALL_HEIGHT * 2));
+
+        // Place one-tile lower to hide the bottom
+        wallBuilder.buildWall(WALL_STARTX, -16, 3, height + 1);
+
+        // Place second wall above the first
+        wallBuilder.buildWall(WALL_STARTX,
+                             (height + MIN_WALL_HEIGHT) * 16,
+                             3,
+                             MAX_WALL_HEIGHT - height);
     }
 
     @Override

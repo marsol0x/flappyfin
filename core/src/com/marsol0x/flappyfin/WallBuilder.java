@@ -39,12 +39,15 @@ public class WallBuilder {
         Array<WallPiece> wall = new Array<WallPiece>();
 
         // Filler everywhere
+        float posX, posY;
         for (int i = 0; i < w; i++) {
             for (int j = 0; j < h; j++) {
-                wall.add(getTile(rockTiles[1][1],
-                        x + (i * TILE_SIZE),
-                        y + (j * TILE_SIZE)
-                        ));
+                posX = x + (i * TILE_SIZE);
+                posY = y + (j * TILE_SIZE);
+                if (posY < 0 || posY > Gdx.graphics.getHeight()) {
+                    continue;
+                }
+                wall.add(getTile(rockTiles[1][1], posX, posY));
             }
         }
 
