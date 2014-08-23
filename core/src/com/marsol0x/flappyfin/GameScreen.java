@@ -1,5 +1,7 @@
 package com.marsol0x.flappyfin;
 
+import java.util.Iterator;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
@@ -9,6 +11,7 @@ import com.badlogic.gdx.graphics.g2d.Animation.PlayMode;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.utils.Array;
 
 public class GameScreen implements Screen {
     private FlappyFinGame game;
@@ -29,6 +32,10 @@ public class GameScreen implements Screen {
     private final float WALL_TIME = 3f;
     private float timeSinceWall = WALL_TIME;
 
+    private int score;
+
+    private Array<Rectangle> scoreRects;
+
     public GameScreen(FlappyFinGame game) {
         this.game = game;
 
@@ -40,6 +47,9 @@ public class GameScreen implements Screen {
 
         player = new Player(Gdx.graphics.getWidth() / 3, Gdx.graphics.getHeight() / 2);
         playerObj = new Rectangle(player.getX(), player.getY(), FISH_SIZE, FISH_SIZE);
+
+        scoreRects = new Array<Rectangle>();
+        score = 0;
     }
 
     @Override
@@ -54,16 +64,27 @@ public class GameScreen implements Screen {
             game.batch.draw(wp.getTexture(), wp.getX(), wp.getY());
         }
         game.batch.draw(fishAnimation.getKeyFrame(stateTime), player.getX(), player.getY());
+        game.font.draw(game.batch, String.valueOf(score), 5, Gdx.graphics.getHeight() - 5);
         game.batch.end();
 
         // Update game world
         wallBuilder.update(delta);
+        updateScoreColliders(delta);
+
+        // Update player
         player.update(delta);
         playerObj.x = player.getX();
         playerObj.y = player.getY();
+
+        // Check score collisions
+        checkScoreCollisions();
+
+        // Check wall collisions
         if (wallBuilder.checkCollision(playerObj)) {
             player.kill();
         }
+
+        // Check player death
         if (player.isDead()) {
             game.setScreen(new MainMenu(game));
             dispose();
@@ -77,7 +98,7 @@ public class GameScreen implements Screen {
         }
     }
 
-    public void placeObstacle() {
+    private void placeObstacle() {
         // Build two walls with a space between them
         // Get bottom wall height
         int height = MathUtils.random(MIN_WALL_HEIGHT, MAX_WALL_HEIGHT - (MIN_WALL_HEIGHT * 2));
@@ -90,6 +111,29 @@ public class GameScreen implements Screen {
                              (height + MIN_WALL_HEIGHT) * 16,
                              3,
                              MAX_WALL_HEIGHT - height);
+        addScoreCollider();
+    }
+
+    private void addScoreCollider() {
+        scoreRects.add(new Rectangle(WALL_STARTX, 8, 32, Gdx.graphics.getHeight()));
+    }
+
+    private void updateScoreColliders(float delta) {
+        for (Rectangle r : scoreRects) {
+            r.x -= 45f * delta;
+        }
+    }
+
+    private void checkScoreCollisions() {
+        Iterator<Rectangle> iter = scoreRects.iterator();
+        Rectangle r;
+        while (iter.hasNext()) {
+            r = iter.next();
+            if (r.overlaps(playerObj)) {
+                score += 1;
+                scoreRects.removeValue(r, true);
+            }
+        }
     }
 
     @Override
