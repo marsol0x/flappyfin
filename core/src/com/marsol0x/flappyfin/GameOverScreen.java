@@ -31,11 +31,10 @@ public class GameOverScreen implements Screen {
 
         // Draw score and ask if the player wants to replay
         game.batch.begin();
-        game.font.setScale(2f);
-        game.font.draw(game.batch,
-                        String.valueOf(score),
-                        Gdx.graphics.getWidth() / 2,
-                        (Gdx.graphics.getHeight() / 3) * 2);
+        NumberDrawer.draw(game.batch,
+                score,
+                Gdx.graphics.getWidth() / 2,
+                (Gdx.graphics.getHeight() / 2) + 10);
         game.batch.draw(playAgainImg,
                 playAgainPos.x,
                 playAgainPos.y,

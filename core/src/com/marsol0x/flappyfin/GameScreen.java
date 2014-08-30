@@ -53,7 +53,6 @@ public class GameScreen implements Screen {
 
         scoreRects = new Array<Rectangle>();
         score = 0;
-
     }
 
     @Override
@@ -68,7 +67,7 @@ public class GameScreen implements Screen {
             game.batch.draw(wp.getTexture(), wp.getX(), wp.getY());
         }
         game.batch.draw(fishAnimation.getKeyFrame(stateTime), player.getX(), player.getY());
-        game.font.draw(game.batch, String.valueOf(score), 5, Gdx.graphics.getHeight() - 5);
+        NumberDrawer.draw(game.batch, score, 5, Gdx.graphics.getHeight() - 40);
         game.batch.end();
 
         // Update game world

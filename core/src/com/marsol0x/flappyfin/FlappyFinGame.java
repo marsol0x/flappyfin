@@ -13,6 +13,9 @@ public class FlappyFinGame extends Game {
         batch = new SpriteBatch();
         font = new BitmapFont();
 
+        // Initialize number drawer (original name, huh?)
+        NumberDrawer.init();
+
         this.setScreen(new MainMenuScreen(this));
     }
 
