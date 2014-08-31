@@ -70,34 +70,39 @@ public class GameScreen implements Screen {
         NumberDrawer.draw(game.batch, score, 5, Gdx.graphics.getHeight() - 40);
         game.batch.end();
 
-        // Update game world
-        wallBuilder.update(delta);
-        updateScoreColliders(delta);
+        if (!player.isDead()) {
+            // Update game world
+            wallBuilder.update(delta);
+            updateScoreColliders(delta);
 
-        // Update player
-        player.update(delta);
-        playerObj.x = player.getX();
-        playerObj.y = player.getY();
+            // Update player
+            player.update(delta);
+            playerObj.x = player.getX();
+            playerObj.y = player.getY();
 
-        // Check score collisions
-        checkScoreCollisions();
+            // Check score collisions
+            checkScoreCollisions();
 
-        // Check wall collisions
-        if (wallBuilder.checkCollision(playerObj)) {
-            player.kill();
+            // Check wall collisions
+            if (wallBuilder.checkCollision(playerObj)) {
+                player.kill();
+            }
+
+            // Place new obstacles/walls
+            timeSinceWall += delta;
+            if (timeSinceWall >= WALL_TIME) {
+                timeSinceWall = 0f;
+                placeObstacle();
+            }
+        } else {
+            // Run the "death" animation
+            player.deathUpdate(delta);
         }
 
         // Check player death
-        if (player.isDead()) {
+        if (player.isDead() && !player.inDeathUpdate()) {
             game.setScreen(new GameOverScreen(game, score));
             dispose();
-        }
-
-        // Place new obstacles/walls
-        timeSinceWall += delta;
-        if (timeSinceWall >= WALL_TIME) {
-            timeSinceWall = 0f;
-            placeObstacle();
         }
     }
 

@@ -11,6 +11,7 @@ public class Player extends InputAdapter {
     private Vector2 playerPos;
 
     private boolean dead = false;
+    private boolean runningDeath = false;
 
     public Player (float x, float y) {
         playerVelocity = new Vector2(0, 0);
@@ -24,9 +25,14 @@ public class Player extends InputAdapter {
         if (playerPos.y < 0) {
             dead = true;
         }
+    }
+
+    public void deathUpdate(float delta) {
+        playerPos.y += playerVelocity.y * delta;
+        playerVelocity.y += GRAVITY.y * delta;
 
         if (playerPos.y < 0) {
-            dead = true;
+            runningDeath = false;
         }
     }
 
@@ -44,11 +50,17 @@ public class Player extends InputAdapter {
 
     public void kill() {
         dead = true;
+        runningDeath = true;
+        playerVelocity.set(0f, 0f);
+    }
+
+    public boolean inDeathUpdate() {
+        return runningDeath;
     }
 
     @Override
     public boolean touchDown(int x, int y, int pointer, int button) {
-        if (button != Input.Buttons.LEFT) return false;
+        if (button != Input.Buttons.LEFT || dead) return false;
 
         playerVelocity.y = HOP_SPEED.y;
 
