@@ -33,8 +33,9 @@ public class GameScreen implements Screen {
     private float timeSinceWall = WALL_TIME;
 
     private int score;
-
     private Array<Rectangle> scoreRects;
+
+    private BubbleManager bubbleManager;
 
     public GameScreen(FlappyFinGame game) {
         this.game = game;
@@ -53,6 +54,8 @@ public class GameScreen implements Screen {
 
         scoreRects = new Array<Rectangle>();
         score = 0;
+
+        bubbleManager = new BubbleManager();
     }
 
     @Override
@@ -67,6 +70,7 @@ public class GameScreen implements Screen {
             game.batch.draw(wp.getTexture(), wp.getX(), wp.getY());
         }
         game.batch.draw(fishAnimation.getKeyFrame(stateTime), player.getX(), player.getY());
+        bubbleManager.draw(game.batch);
         NumberDrawer.draw(game.batch, score, 5, Gdx.graphics.getHeight() - 40);
         game.batch.end();
 
@@ -74,6 +78,7 @@ public class GameScreen implements Screen {
             // Update game world
             wallBuilder.update(delta);
             updateScoreColliders(delta);
+            bubbleManager.update(delta);
 
             // Update player
             player.update(delta);
