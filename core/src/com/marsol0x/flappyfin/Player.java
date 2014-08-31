@@ -1,17 +1,14 @@
 package com.marsol0x.flappyfin;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.math.Vector2;
 
 public class Player extends InputAdapter {
-    private final Vector2 GRAVITY = new Vector2(0, 9.8f);
+    private final Vector2 GRAVITY = new Vector2(0, -350f);
+    private final Vector2 HOP_SPEED = new Vector2(0, 150f);
     private Vector2 playerVelocity;
     private Vector2 playerPos;
-    private float hopDelay = 0f;
-
-    private boolean isHopping = false;
 
     private boolean dead = false;
 
@@ -21,20 +18,11 @@ public class Player extends InputAdapter {
     }
 
     public void update(float delta) {
-        if (isHopping || hopDelay > 0f) {
-            playerPos.y += playerVelocity.y * delta;
-            if (playerPos.y > Gdx.graphics.getHeight()) {
-                playerPos.y = Gdx.graphics.getHeight();
-            }
-            hopDelay -= delta;
-        } else {
-            playerVelocity.add(0, GRAVITY.y);
-            playerPos.y -= playerVelocity.y * delta;
-        }
+        playerPos.y += playerVelocity.y * delta;
+        playerVelocity.y += GRAVITY.y * delta;
 
-        if (isHopping && hopDelay <= 0) {
-            isHopping = false;
-            playerVelocity.y = 0f;
+        if (playerPos.y < 0) {
+            dead = true;
         }
 
         if (playerPos.y < 0) {
@@ -62,9 +50,7 @@ public class Player extends InputAdapter {
     public boolean touchDown(int x, int y, int pointer, int button) {
         if (button != Input.Buttons.LEFT) return false;
 
-        isHopping = true;
-        playerVelocity.sub(0, GRAVITY.y);
-        hopDelay = 0.2f;
+        playerVelocity.y = HOP_SPEED.y;
 
         return true;
     }
