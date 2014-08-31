@@ -10,7 +10,7 @@ public class NumberDrawer {
 
     public static void init() {
         numImgs = new Texture[10];
-        for (int i = 0; i < 9; i++) {
+        for (int i = 0; i < 10; i++) {
             numImgs[i] = new Texture(Gdx.files.internal("numbers/" + i + ".png"));
         }
     }
